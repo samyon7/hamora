@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Hamora Chart</title>
+</head>
+<body>
+<div>
+    <a href="/">Belanja Barang Lainnya</a>
+    <table border="2" style="padding: 10px">
+        <thead>
+        <th>No</th>
+        <th>Nama Barang</th>
+        <th>Harga</th>
+        <th>Qty</th>
+        <th>Sub Total</th>
+        <th>Action</th>
+        </thead>
+        <tbody>
+        {% if charts %}
+        {% for chart in charts %}
+        <tr>
+            <td> {{ forloop.counter }}</td>
+            <td>{{ chart.product.product_name }}</td>
+            <td>{{ chart.product.price }}</td>
+            <td>{{ chart.quantity }}</td>
+            <td>{{ chart.total_price }}</td>
+            <td>
+                <form action="/chart/increment" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="chart_id" id="chart_id" value="{{ chart.chart_id }}">
+                    <button type="submit">+</button>
+                </form>
+                <form action="/chart/decrement" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="chart_id" value="{{ chart.chart_id }}">
+                    <button type="submit">-</button>
+                </form>
+            </td>
+
+        </tr>
+        {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+    <p>Total Harga : {{ total }}</p>
+    <form action="/chart/checkout" method="post">
+        {% csrf_token %}
+        <button type="submit">Checkout</button>
+    </form>
+</div>
+</body>
+</html>
